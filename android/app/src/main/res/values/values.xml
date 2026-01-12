@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Firebase Configuration -->
+    <!-- 
+    IMPORTANT: You need to add your Firebase configuration values here.
+    You can get these values from your Firebase Console:
+    1. Go to https://console.firebase.google.com/
+    2. Select your project
+    3. Go to Project Settings (gear icon)
+    4. In the "Your apps" section, find your Android app
+    5. Download the google-services.json file and place it in android/app/
+    
+    Alternatively, you can manually add the values below:
+    -->
+    
+    <!-- Replace these placeholder values with your actual Firebase configuration -->
+    <string name="google_app_id" translatable="false">YOUR_GOOGLE_APP_ID</string>
+    <string name="default_web_client_id" translatable="false">YOUR_WEB_CLIENT_ID</string>
+    <string name="firebase_database_url" translatable="false">YOUR_DATABASE_URL</string>
+    <string name="gcm_defaultSenderId" translatable="false">YOUR_SENDER_ID</string>
+    <string name="google_api_key" translatable="false">YOUR_API_KEY</string>
+    <string name="google_storage_bucket" translatable="false">YOUR_STORAGE_BUCKET</string>
+    <string name="project_id" translatable="false">YOUR_PROJECT_ID</string>
+</resources>

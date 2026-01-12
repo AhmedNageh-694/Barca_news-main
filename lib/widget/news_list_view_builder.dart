@@ -1,43 +1,72 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app/models/articlemodel.dart';
-import 'package:news_app/services/news_services.dart';
+import 'package:get/get.dart';
+import 'package:news_app/controllers/news_controller.dart';
 import 'package:news_app/widget/newslistview.dart';
 
-class Newslistviewbuilder extends StatelessWidget {
+class Newslistviewbuilder extends StatefulWidget {
   const Newslistviewbuilder({super.key, required this.category});
   final String category;
 
-  Future<List<ArticleModel>> _loadNews() {
-    // Single Dio + NewsServices per call; can be further abstracted if needed.
-    return NewsServices(Dio()).getSportsNews(query: 'fcbarcelona');
+  @override
+  State<Newslistviewbuilder> createState() => _NewslistviewbuilderState();
+}
+
+class _NewslistviewbuilderState extends State<Newslistviewbuilder> {
+  late NewsController controller;
+  late String tag;
+
+  @override
+  void initState() {
+    super.initState();
+    tag = widget.category;
+    // Create a new controller for this specific category (or find existing one)
+    controller = Get.put(NewsController(), tag: tag);
+    if (controller.articles.isEmpty) {
+      controller.getNews(category: widget.category);
+    }
+  }
+
+  // If the widget updates with a new category (unlikely given key usage, but good practice)
+  @override
+  void didUpdateWidget(Newslistviewbuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.category != widget.category) {
+      tag = widget.category;
+      controller = Get.put(NewsController(), tag: tag);
+      controller.getNews(category: widget.category);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<ArticleModel>>(
-      future: _loadNews(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SliverToBoxAdapter(
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(top: 100),
             child: Center(child: CircularProgressIndicator()),
-          );
-        }
-        if (snapshot.hasError) {
-          return const SliverToBoxAdapter(
+          ),
+        );
+      } else if (controller.errorMessage.isNotEmpty) {
+        return SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Center(
-              child: Text('Oops, there was an error. Please try again later.'),
+              child: Text('Error: ${controller.errorMessage.value}'),
+            ),
+          ),
+        );
+      } else {
+        if (controller.articles.isEmpty) {
+          return const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Center(child: Text('No news available.')),
             ),
           );
         }
-        final data = snapshot.data;
-        if (data == null || data.isEmpty) {
-          return const SliverToBoxAdapter(
-            child: Center(child: Text('No news available.')),
-          );
-        }
-        return NewsListView(article: data);
-      },
-    );
+        return NewsListView(article: controller.articles);
+      }
+    });
   }
 }
