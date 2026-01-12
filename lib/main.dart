@@ -1,4 +1,6 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,7 +25,12 @@ Future<void> main() async {
     // Auth features will just return errors but app will work.
   }
 
-  runApp(const BarcaNewsApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const BarcaNewsApp(),
+    ),
+  );
 }
 
 class BarcaNewsApp extends StatelessWidget {
