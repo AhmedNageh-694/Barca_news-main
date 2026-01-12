@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_app/models/categorymodel.dart';
+import 'package:news_app/core/constants/constants.dart';
+import 'package:news_app/models/models.dart';
 import 'package:news_app/views/categoty_view.dart';
 import 'package:news_app/widget/categorycard.dart';
 
@@ -24,18 +25,17 @@ class CategoriesListView extends StatelessWidget {
     return SizedBox(
       height: 120,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingM),
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
         itemBuilder: (context, index) {
+          final category = _categories[index];
           return GestureDetector(
-            onTap: () {
-              Get.to(
-                () => CategotyView(category: _categories[index].categoryName),
-              );
-            },
-            child: Categorycard(categoryModel: _categories[index]),
+            onTap:
+                () =>
+                    Get.to(() => CategoryView(category: category.categoryName)),
+            child: CategoryCard(categoryModel: category),
           );
         },
       ),

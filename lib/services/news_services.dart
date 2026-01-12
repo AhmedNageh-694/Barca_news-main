@@ -1,31 +1,54 @@
 import 'package:dio/dio.dart';
-import 'package:news_app/models/articlemodel.dart';
+import 'package:news_app/core/config/api_config.dart';
+import 'package:news_app/models/models.dart';
 
+/// Service class for fetching news from the API
 class NewsServices {
-  final Dio dio;
-  NewsServices(this.dio);
-  static const String _apiKey = 'ae693838985d492ebc1de831211a4242';
-  static const String _language = 'en';
+  final Dio _dio;
 
+  NewsServices(this._dio);
+
+  /// Fetch sports news based on a search query
+  /// Throws [DioException] for network errors or [FormatException] for parsing errors
   Future<List<ArticleModel>> getSportsNews({required String query}) async {
     try {
-      var url = await dio.get(
-        'https://newsapi.org/v2/everything?q=$query&apiKey=$_apiKey&language=$_language',
+      final uri = Uri.parse('${ApiConfig.newsApiBaseUrl}/everything').replace(
+        queryParameters: {
+          'q': query,
+          'apiKey': ApiConfig.newsApiKey,
+          'language': ApiConfig.newsApiLanguage,
+        },
       );
-      Map<String, dynamic> jsonData = url.data;
-      List<dynamic> artcles = jsonData['articles'];
-      List<ArticleModel> articlesList = [];
-      for (var article in artcles) {
-        ArticleModel articleModel = ArticleModel(
-          image: article['urlToImage'],
-          titel: article['title'],
-          suptitel: article['description'],
+
+      final response = await _dio.getUri(uri);
+
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Failed to fetch news: ${response.statusCode} ${response.statusMessage}',
         );
-        articlesList.add(articleModel);
       }
-      return articlesList;
+
+      final Map<String, dynamic> jsonData = response.data;
+
+      if (jsonData['status'] == 'error') {
+        throw Exception(jsonData['message'] ?? 'API returned an error');
+      }
+
+      final List<dynamic> articles = jsonData['articles'] ?? [];
+
+      if (articles.isEmpty) {
+        return [];
+      }
+
+      return articles.map((article) => ArticleModel.fromJson(article)).toList();
+    } on DioException catch (e) {
+      // Re-throw DioException with more context
+      throw Exception(
+        'Network error: ${e.message ?? 'Unable to connect to the server'}',
+      );
     } catch (e) {
-      return [];
+      // Re-throw other exceptions with context
+      throw Exception('Failed to fetch news: ${e.toString()}');
     }
   }
 }

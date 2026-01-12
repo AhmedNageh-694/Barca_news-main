@@ -20,12 +20,19 @@ class NewsController extends GetxController {
       );
 
       if (fetchedArticles.isEmpty) {
-        errorMessage.value = 'No articles found or network error.';
+        errorMessage.value = 'No articles found for this category.';
       } else {
         articles.value = fetchedArticles;
+        errorMessage.value = ''; // Clear any previous errors
       }
     } catch (e) {
-      errorMessage.value = e.toString();
+      // Extract clean error message
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
+      errorMessage.value =
+          errorMsg.isNotEmpty
+              ? errorMsg
+              : 'Failed to load news. Please try again.';
+      articles.value = []; // Clear articles on error
     } finally {
       isLoading.value = false;
     }
