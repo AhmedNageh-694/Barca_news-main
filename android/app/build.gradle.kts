@@ -29,6 +29,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Add multiDex support for Firebase and Google Play Services
+        multiDexEnabled = true
     }
 
     buildTypes {

@@ -50,7 +50,7 @@ class _DrawerHeader extends StatelessWidget {
             padding: const EdgeInsets.all(AppDimensions.paddingXS),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.white.withOpacity(0.2),
+              color: AppColors.white.withValues(alpha: 0.2),
               border: Border.all(color: AppColors.white, width: 2),
             ),
             child: Image.asset(
@@ -185,7 +185,7 @@ class _DrawerItem extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(AppDimensions.paddingS),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withOpacity(0.1),
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppDimensions.radiusS),
         ),
         child: Icon(icon, color: theme.colorScheme.primary, size: 22),
@@ -199,7 +199,7 @@ class _DrawerItem extends StatelessWidget {
         size: 20,
         color: Colors.grey[400],
       ),
-      hoverColor: theme.colorScheme.primary.withOpacity(0.05),
+      hoverColor: theme.colorScheme.primary.withValues(alpha: 0.05),
     );
   }
 }

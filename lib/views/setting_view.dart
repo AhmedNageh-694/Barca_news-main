@@ -147,7 +147,7 @@ class _UserTile extends StatelessWidget {
           radius: 30,
           backgroundColor: Theme.of(
             context,
-          ).colorScheme.primary.withOpacity(0.1),
+          ).colorScheme.primary.withValues(alpha:0.1 ),
           child: Icon(
             Icons.person,
             color: Theme.of(context).colorScheme.primary,
@@ -202,7 +202,7 @@ class _PreferencesCard extends StatelessWidget {
             height: 1,
             indent: AppDimensions.paddingM,
             endIndent: AppDimensions.paddingM,
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
           ),
           _LanguageTile(isRtl: isRtl, localeController: localeController),
         ],

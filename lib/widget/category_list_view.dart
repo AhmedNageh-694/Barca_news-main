@@ -18,6 +18,10 @@ class CategoriesListView extends StatelessWidget {
       image: "assets/images/health_barca.jpg",
       categoryName: "Health",
     ),
+        CategoryModel(
+      image: "assets/images/health_barca.jpg",
+      categoryName: "Health",
+    ),
   ];
 
   @override
